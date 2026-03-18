@@ -1,7 +1,6 @@
 """Flask backend for Gutenberg app."""
 import os
-import random
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from supabase import create_client
@@ -52,33 +51,18 @@ def get_categories():
     return jsonify(cats)
 
 
-@app.route('/api/categories/<int:category_id>/book')
-def get_book(category_id):
-    """Return one random book from a category, excluding already-seen IDs."""
+@app.route('/api/categories/<int:category_id>/books')
+def get_books(category_id):
+    """Return all books with summaries for a category."""
     if category_id not in CATEGORIES:
         return jsonify({'error': 'Category not found'}), 404
 
-    exclude = request.args.get('exclude', '')
-    exclude_ids = [int(x) for x in exclude.split(',') if x.strip()]
+    result = supabase.table('category_summary_books') \
+        .select('book_id, summary') \
+        .eq('category_id', category_id) \
+        .execute()
 
-    # Get all book IDs in this category
-    cat_query = supabase.table('book_categories').select('book_id').eq('category_id', category_id)
-    if exclude_ids:
-        cat_query = cat_query.not_.in_('book_id', exclude_ids)
-    cat_result = cat_query.limit(1000).execute()
-
-    if not cat_result.data:
-        return jsonify({'error': 'No more books in this category'}), 404
-
-    # Filter to only books that have summaries
-    book_ids = [b['book_id'] for b in cat_result.data]
-    summary_result = supabase.table('book_summaries').select('book_id, summary').in_('book_id', book_ids).execute()
-
-    if not summary_result.data:
-        return jsonify({'error': 'No more books in this category'}), 404
-
-    book = random.choice(summary_result.data)
-    return jsonify({'book_id': book['book_id'], 'summary': book['summary']})
+    return jsonify(result.data)
 
 
 if __name__ == '__main__':

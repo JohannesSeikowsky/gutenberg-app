@@ -1,41 +1,40 @@
 /**Main app — category dropdown + book discovery on one page.*/
-import { useEffect, useState, useRef } from 'react';
-import { fetchCategories, fetchBook } from './api';
+import { useEffect, useState } from 'react';
+import { fetchCategories, fetchAllBooks } from './api';
 import BookCard from './components/BookCard';
+
+function shuffle(arr) {
+  /**Fisher-Yates shuffle in place.*/
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 export default function App() {
   /**Single-page app with category picker and book display.*/
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState('');
-  const [book, setBook] = useState(null);
-  const [done, setDone] = useState(false);
-  const seenIds = useRef([]);
+  const [books, setBooks] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCategories().then(setCategories);
   }, []);
 
-  const loadBook = (catId, seen) => {
-    /**Fetch next unseen book for the given category.*/
-    fetchBook(catId, seen).then((data) => {
-      if (!data) {
-        setDone(true);
-      } else {
-        seenIds.current.push(data.book_id);
-        setBook(data);
-        setDone(false);
-      }
-    });
-  };
-
   const handleSelect = (e) => {
+    /**Fetch all books for the selected category and shuffle them.*/
     const id = e.target.value;
     if (!id) return;
     setCategoryId(id);
-    setBook(null);
-    setDone(false);
-    seenIds.current = [];
-    loadBook(id, []);
+    setLoading(true);
+    fetchAllBooks(id).then((data) => {
+      setBooks(shuffle(data));
+      setIndex(0);
+      setLoading(false);
+    });
   };
 
   return (
@@ -48,9 +47,12 @@ export default function App() {
         ))}
       </select>
 
-      {done && <p>No more books in this category.</p>}
-      {book && !done && (
-        <BookCard book={book} onNext={() => loadBook(categoryId, seenIds.current)} />
+      {loading && <p>Loading...</p>}
+      {!loading && books.length > 0 && index >= books.length && (
+        <p>No more books in this category.</p>
+      )}
+      {!loading && books.length > 0 && index < books.length && (
+        <BookCard book={books[index]} onNext={() => setIndex(i => i + 1)} />
       )}
     </div>
   );
