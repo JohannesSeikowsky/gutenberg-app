@@ -53,7 +53,7 @@ gutenberg_app/
 - Single-page UI: category dropdown at top, book card below (no routing)
 - User picks one of the main Gutenberg categories from a dropdown
 - One book is shown at a time with three actions:
-  - **Start reading** — open the book in-app
+  - **Start reading** — opens the Gutenberg HTML page in a new tab
   - **Add to library** — save it to their personal list
   - **Next** — show another book from the same category
 - Full search is deferred to a later version
@@ -64,6 +64,5 @@ gutenberg_app/
 - Progress saved per user per book in Supabase as a paragraph/element index (robust across screen sizes)
 
 ### Book content
-- Fetched directly from Project Gutenberg
-- Open: what format to use — their HTML pages or plain `.txt` files?
+- Uses Gutenberg's HTML pages: `https://www.gutenberg.org/cache/epub/{id}/pg{id}-images.html`
 
