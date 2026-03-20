@@ -82,6 +82,7 @@ select {
   color: white;
 }
 
+.book-actions button:first-child,
 .book-actions button:last-child {
   background: #6c757d;
 }
@@ -166,4 +167,74 @@ select {
   color: #dc3545;
   margin-top: 1rem;
   font-size: 0.9rem;
+}
+
+/* Header nav */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-link {
+  font-size: 0.85rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+/* Library */
+.library {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.library-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.library-title {
+  font-weight: 500;
+  flex: 1;
+  margin-right: 0.75rem;
+}
+
+.library-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.library-actions a {
+  font-size: 0.85rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.library-actions a + a {
+  color: #666;
+}
+
+/* Added toast */
+.added-toast {
+  text-align: center;
+  color: #28a745;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  animation: fadeOut 1.5s forwards;
+}
+
+@keyframes fadeOut {
+  0%, 70% { opacity: 1; }
+  100% { opacity: 0; }
 }

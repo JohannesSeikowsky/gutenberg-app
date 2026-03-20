@@ -55,7 +55,8 @@ gutenberg_app/
 - Single-page UI: category dropdown at top, book card below (no routing)
 - User picks one of the main Gutenberg categories from a dropdown
 - All books for a category are fetched in one request, shuffled client-side
-- One book is shown at a time with three actions:
+- One book is shown at a time with four actions:
+  - **Back** — return to the previously shown book (disabled on first book)
   - **Start reading** — opens the Gutenberg HTML page in a new tab
   - **Add to library** — save it to their personal list
   - **Next** — show another book from the same category (instant, no API call)

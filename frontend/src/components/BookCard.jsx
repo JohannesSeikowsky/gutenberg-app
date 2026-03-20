@@ -1,21 +1,35 @@
 /**Displays a book summary with action buttons.*/
+import { useState } from 'react';
+import { addToLibrary } from '../lib/library';
 
 function formatSummary(text) {
   /**Bold the opening quoted title in a summary string.*/
   const match = text.match(/^(".*?")/);
   if (!match) return text;
-  return <>{<strong>{match[1]}</strong>}{text.slice(match[1].length)}</>;
+  return <><strong style={{ fontSize: '1.2em' }}>{match[1]}</strong>{text.slice(match[1].length)}</>;
 }
 
-export default function BookCard({ book, onNext }) {
+export default function BookCard({ book, user, onBack, canGoBack, onNext }) {
+  /**Book card with back, read, add-to-library, and next actions.*/
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = async () => {
+    /**Add book to library and show confirmation.*/
+    await addToLibrary(user.id, book.book_id, book.summary);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+
   return (
     <div className="book-card">
       <p className="book-summary">{formatSummary(book.summary)}</p>
       <div className="book-actions">
+        <button onClick={onBack} disabled={!canGoBack}>Back</button>
         <button onClick={() => window.open(`https://www.gutenberg.org/cache/epub/${book.book_id}/pg${book.book_id}-images.html`, '_blank')}>Start Reading</button>
-        <button onClick={() => alert('Library coming soon!')}>Add to Library</button>
+        <button onClick={handleAdd}>Add to Library</button>
         <button onClick={onNext}>Next</button>
       </div>
+      {added && <p className="added-toast">Added to Library</p>}
     </div>
   );
 }

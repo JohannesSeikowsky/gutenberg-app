@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { fetchCategories, fetchAllBooks } from './api';
 import BookCard from './components/BookCard';
+import Library from './components/Library';
 import Login from './components/Login';
 import { useAuth } from './AuthContext';
 
@@ -22,6 +23,7 @@ export default function App() {
   const [books, setBooks] = useState([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState('discover');
 
   useEffect(() => {
     if (user) fetchCategories().then(setCategories);
@@ -43,11 +45,22 @@ export default function App() {
   if (authLoading) return <p>Loading…</p>;
   if (!user) return <Login />;
 
+  if (page === 'library') {
+    return (
+      <div className="app">
+        <Library user={user} onBack={() => setPage('discover')} />
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <header className="app-header">
         <h1>Browse Categories</h1>
-        <button className="sign-out-btn" onClick={signOut}>Sign out</button>
+        <div className="header-actions">
+          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setPage('library') }}>My Library</a>
+          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); signOut() }}>Sign out</a>
+        </div>
       </header>
       <select onChange={handleSelect} value={categoryId}>
         <option value="" disabled>Select a category…</option>
@@ -61,7 +74,7 @@ export default function App() {
         <p>No more books in this category.</p>
       )}
       {!loading && books.length > 0 && index < books.length && (
-        <BookCard book={books[index]} onNext={() => setIndex(i => i + 1)} />
+        <BookCard book={books[index]} user={user} onBack={() => setIndex(i => i - 1)} canGoBack={index > 0} onNext={() => setIndex(i => i + 1)} />
       )}
     </div>
   );
