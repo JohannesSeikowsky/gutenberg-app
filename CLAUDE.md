@@ -43,7 +43,8 @@ gutenberg_app/
   - `category_summary_books` — ~21k rows, pre-joined table with `category_id`, `book_id`, `summary`. Primary table used by the app.
   - `book_categories` — 182k rows mapping `book_id` → `category_id` (backup, not queried). Category IDs match `main_categories.txt` (633–704).
   - `book_summaries` — ~9k rows mapping `book_id` → `summary` (backup, not queried).
-- Tables still needed: users, user_library, reading_progress
+  - `user_library` — per-user saved books with `user_id`, `book_id`, `summary`, `added_at`. RLS enforces per-user access.
+- Tables still needed: reading_progress
 
 ## Version 1 Scope
 
