@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { fetchCategories, fetchAllBooks } from './api';
 import BookCard from './components/BookCard';
+import Login from './components/Login';
+import { useAuth } from './AuthContext';
 
 function shuffle(arr) {
   /**Fisher-Yates shuffle in place.*/
@@ -14,6 +16,7 @@ function shuffle(arr) {
 
 export default function App() {
   /**Single-page app with category picker and book display.*/
+  const { user, loading: authLoading, signOut } = useAuth();
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState('');
   const [books, setBooks] = useState([]);
@@ -21,8 +24,8 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchCategories().then(setCategories);
-  }, []);
+    if (user) fetchCategories().then(setCategories);
+  }, [user]);
 
   const handleSelect = (e) => {
     /**Fetch all books for the selected category and shuffle them.*/
@@ -37,9 +40,15 @@ export default function App() {
     });
   };
 
+  if (authLoading) return <p>Loading…</p>;
+  if (!user) return <Login />;
+
   return (
     <div className="app">
-      <h1>Browse Categories</h1>
+      <header className="app-header">
+        <h1>Browse Categories</h1>
+        <button className="sign-out-btn" onClick={signOut}>Sign out</button>
+      </header>
       <select onChange={handleSelect} value={categoryId}>
         <option value="" disabled>Select a category…</option>
         {categories.map((cat) => (

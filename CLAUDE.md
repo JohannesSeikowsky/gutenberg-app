@@ -17,7 +17,7 @@ gutenberg_app/
 
 ## How it fits together
 - React app runs in browser (web) or in a WebView via Capacitor (mobile)
-- React calls Flask API for auth and user data
+- Auth handled frontend-only via Supabase JS (email OTP); Flask validates JWT on protected routes
 - Books/content fetched from Gutenberg's public API
 - Supabase stores user accounts, reading progress, bookmarks
 
@@ -34,7 +34,7 @@ gutenberg_app/
 | Mobile   | Capacitor          |
 | Backend  | Flask (Python)     |
 | Database | Supabase           |
-| Auth     | JWT + Google OAuth |
+| Auth     | Supabase email OTP (frontend-only) |
 | Books    | Gutenberg public API |
 
 ## Supabase setup
@@ -48,7 +48,7 @@ gutenberg_app/
 ## Version 1 Scope
 
 ### User accounts
-- Register/login via email or Google Sign-In (OAuth)
+- Register/login via email OTP (auto-creates account on first use)
 - Each user has a personal **library**: a saved list of books they can add to or remove from
 
 ### Book discovery

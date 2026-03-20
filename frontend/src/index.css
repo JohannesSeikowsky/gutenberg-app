@@ -89,3 +89,81 @@ select {
 .book-actions button:hover {
   opacity: 0.9;
 }
+
+/* Auth */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.app-header h1 {
+  margin-bottom: 0;
+}
+
+.sign-out-btn {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.login-container {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-form input {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.otp-input {
+  text-align: center;
+  font-size: 1.5rem !important;
+  letter-spacing: 0.5rem;
+}
+
+.otp-hint {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.login-form button {
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  background: #007bff;
+  color: white;
+}
+
+.login-form button:hover {
+  opacity: 0.9;
+}
+
+.login-form .back-btn {
+  background: #6c757d;
+}
+
+.login-error {
+  color: #dc3545;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
