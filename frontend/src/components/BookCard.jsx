@@ -9,7 +9,7 @@ function formatSummary(text) {
   return <><strong style={{ fontSize: '1.2em' }}>{match[1]}</strong>{text.slice(match[1].length)}</>;
 }
 
-export default function BookCard({ book, user, onBack, canGoBack, onNext }) {
+export default function BookCard({ book, user, onBack, canGoBack, onNext, onRead }) {
   /**Book card with back, read, add-to-library, and next actions.*/
   const [added, setAdded] = useState(false);
 
@@ -25,7 +25,7 @@ export default function BookCard({ book, user, onBack, canGoBack, onNext }) {
       <p className="book-summary">{formatSummary(book.summary)}</p>
       <div className="book-actions">
         <button onClick={onBack} disabled={!canGoBack}>Back</button>
-        <button onClick={() => window.open(`https://www.gutenberg.org/cache/epub/${book.book_id}/pg${book.book_id}-images.html`, '_blank')}>Start Reading</button>
+        <button onClick={() => onRead(book.book_id)}>Start Reading</button>
         <button onClick={handleAdd}>Add to Library</button>
         <button onClick={onNext}>Next</button>
       </div>

@@ -1,9 +1,11 @@
 """Flask backend for Gutenberg app."""
 import os
-from flask import Flask, jsonify
+from functools import lru_cache
+from flask import Flask, jsonify, Response
 from flask_cors import CORS
 from dotenv import load_dotenv
 from supabase import create_client
+import requests
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
@@ -63,6 +65,25 @@ def get_books(category_id):
         .execute()
 
     return jsonify(result.data)
+
+
+@lru_cache(maxsize=128)
+def _fetch_book(book_id):
+    """Fetch and cache a Gutenberg book's HTML."""
+    url = f'https://www.gutenberg.org/cache/epub/{book_id}/pg{book_id}-images.html'
+    return requests.get(url, timeout=15)
+
+
+@app.route('/api/book-content/<int:book_id>')
+def get_book_content(book_id):
+    """Proxy a Gutenberg book's HTML content."""
+    try:
+        resp = _fetch_book(book_id)
+    except requests.RequestException:
+        return jsonify({'error': 'Failed to fetch book'}), 502
+    if resp.status_code == 404:
+        return jsonify({'error': 'Book not found'}), 404
+    return Response(resp.text, content_type='text/html; charset=utf-8')
 
 
 if __name__ == '__main__':

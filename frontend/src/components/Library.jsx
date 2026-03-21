@@ -8,7 +8,7 @@ function extractTitle(summary) {
   return match ? match[1] : 'Untitled'
 }
 
-export default function Library({ user, onBack }) {
+export default function Library({ user, onBack, onRead }) {
   /**Displays the user's saved library.*/
   const [books, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
@@ -39,13 +39,7 @@ export default function Library({ user, onBack }) {
         <div key={b.book_id} className="library-item">
           <span className="library-title">{extractTitle(b.summary)}</span>
           <div className="library-actions">
-            <a
-              href={`https://www.gutenberg.org/cache/epub/${b.book_id}/pg${b.book_id}-images.html`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Start Reading
-            </a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onRead(b.book_id) }}>Start Reading</a>
             <a href="#" onClick={(e) => { e.preventDefault(); handleRemove(b.book_id) }}>Remove</a>
           </div>
         </div>

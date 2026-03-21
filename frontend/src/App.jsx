@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { fetchCategories, fetchAllBooks } from './api';
 import BookCard from './components/BookCard';
 import Library from './components/Library';
+import ReaderView from './components/ReaderView';
 import Login from './components/Login';
 import { useAuth } from './AuthContext';
 
@@ -24,6 +25,15 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState('discover');
+  const [readerBookId, setReaderBookId] = useState(null);
+  const [prevPage, setPrevPage] = useState('discover');
+
+  const openReader = (bookId) => {
+    /**Open the in-app reader for a book.*/
+    setPrevPage(page);
+    setReaderBookId(bookId);
+    setPage('reader');
+  };
 
   useEffect(() => {
     if (user) fetchCategories().then(setCategories);
@@ -45,10 +55,14 @@ export default function App() {
   if (authLoading) return <p>Loading…</p>;
   if (!user) return <Login />;
 
+  if (page === 'reader') {
+    return <ReaderView bookId={readerBookId} onBack={() => setPage(prevPage)} />;
+  }
+
   if (page === 'library') {
     return (
       <div className="app">
-        <Library user={user} onBack={() => setPage('discover')} />
+        <Library user={user} onBack={() => setPage('discover')} onRead={openReader} />
       </div>
     );
   }
@@ -74,7 +88,7 @@ export default function App() {
         <p>No more books in this category.</p>
       )}
       {!loading && books.length > 0 && index < books.length && (
-        <BookCard book={books[index]} user={user} onBack={() => setIndex(i => i - 1)} canGoBack={index > 0} onNext={() => setIndex(i => i + 1)} />
+        <BookCard book={books[index]} user={user} onBack={() => setIndex(i => i - 1)} canGoBack={index > 0} onNext={() => setIndex(i => i + 1)} onRead={openReader} />
       )}
     </div>
   );

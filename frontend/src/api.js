@@ -12,3 +12,10 @@ export async function fetchAllBooks(categoryId) {
   if (!res.ok) return [];
   return res.json();
 }
+
+export async function fetchBookContent(bookId) {
+  /**Fetch raw HTML content for a Gutenberg book.*/
+  const res = await fetch(`/api/book-content/${bookId}`);
+  if (!res.ok) throw new Error('Failed to load book');
+  return res.text();
+}

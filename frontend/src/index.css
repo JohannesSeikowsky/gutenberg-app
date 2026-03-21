@@ -238,3 +238,63 @@ select {
   0%, 70% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+/* Reader */
+.reader-toolbar {
+  position: sticky;
+  top: 0;
+  background: white;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.reader-toolbar button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+}
+
+.reader-title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reader-content {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 65ch;
+  margin: 0 auto;
+  padding: 16px 20px;
+  text-align: left;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.reader-content p { margin-bottom: 1em; }
+.reader-content h1, .reader-content h2, .reader-content h3 {
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+.reader-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+}
+
+@media (max-width: 600px) {
+  .reader-content {
+    font-size: 17px;
+    padding: 12px 16px;
+    max-width: 100%;
+  }
+}

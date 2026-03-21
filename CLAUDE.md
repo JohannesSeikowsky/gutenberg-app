@@ -38,7 +38,7 @@ gutenberg_app/
 | Books    | Gutenberg public API |
 
 ## Supabase setup
-- **URL and key** stored in `.env` (`SUPABASE_URL`, `SUPABASE_KEY`)
+- **URL and key** stored in `.env` (`SUPABASE_URL`, `SUPABASE_KEY`) and `frontend/.env` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_KEY`)
 - Current tables:
   - `category_summary_books` — ~21k rows, pre-joined table with `category_id`, `book_id`, `summary`. Primary table used by the app.
   - `book_categories` — 182k rows mapping `book_id` → `category_id` (backup, not queried). Category IDs match `main_categories.txt` (633–704).
@@ -58,7 +58,7 @@ gutenberg_app/
 - All books for a category are fetched in one request, shuffled client-side
 - One book is shown at a time with four actions:
   - **Back** — return to the previously shown book (disabled on first book)
-  - **Start reading** — opens the Gutenberg HTML page in a new tab
+  - **Start reading** — opens the book in the in-app reader view
   - **Add to library** — save it to their personal list
   - **Next** — show another book from the same category (instant, no API call)
 - Full search is deferred to a later version
@@ -69,5 +69,8 @@ gutenberg_app/
 - Progress saved per user per book in Supabase as a paragraph/element index (robust across screen sizes)
 
 ### Book content
-- Uses Gutenberg's HTML pages: `https://www.gutenberg.org/cache/epub/{id}/pg{id}-images.html`
+- Flask proxies Gutenberg HTML via `/api/book-content/<book_id>` with LRU cache (128 entries)
+- Frontend uses Readability.js to extract article content, DOMPurify to sanitize
+- In-app reader with mobile-friendly serif typography, continuous scroll
+- Source URL: `https://www.gutenberg.org/cache/epub/{id}/pg{id}-images.html`
 
