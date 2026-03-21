@@ -3,14 +3,22 @@ import { useEffect, useState, useRef } from 'react';
 import { Readability } from '@mozilla/readability';
 import DOMPurify from 'dompurify';
 import { fetchBookContent } from '../api';
+import { addToLibrary } from '../lib/library';
 
-export default function ReaderView({ bookId, onBack }) {
+export default function ReaderView({ bookId, summary, user, onBack }) {
   /**Fetches, cleans, and renders a book with mobile-friendly typography.*/
   const [html, setHtml] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [added, setAdded] = useState(false);
   const contentRef = useRef(null);
+
+  const handleAdd = async () => {
+    /**Add current book to library.*/
+    await addToLibrary(user.id, bookId, summary);
+    setAdded(true);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -76,6 +84,11 @@ export default function ReaderView({ bookId, onBack }) {
       <div className="reader-toolbar">
         <button onClick={onBack}>&larr;</button>
         <span className="reader-title">{title}</span>
+        {user && summary && (
+          <button className="reader-add-btn" onClick={handleAdd}>
+            {added ? '✓ Added' : 'Add to Library'}
+          </button>
+        )}
       </div>
       <div
         className="reader-content"

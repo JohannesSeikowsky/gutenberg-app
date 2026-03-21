@@ -12,7 +12,8 @@ A smartphone app (iOS, potentially Android) to read books from Project Gutenberg
 ```
 gutenberg_app/
 ├── backend/    # Flask API
-└── frontend/   # React app (also packaged via Capacitor for mobile)
+├── frontend/   # React app (also packaged via Capacitor for mobile)
+└── myenv/      # Python virtual environment (already exists — do NOT recreate)
 ```
 
 ## How it fits together

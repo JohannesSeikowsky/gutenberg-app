@@ -39,7 +39,7 @@ export default function Library({ user, onBack, onRead }) {
         <div key={b.book_id} className="library-item">
           <span className="library-title">{extractTitle(b.summary)}</span>
           <div className="library-actions">
-            <a href="#" onClick={(e) => { e.preventDefault(); onRead(b.book_id) }}>Start Reading</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onRead(b.book_id, b.summary) }}>Start Reading</a>
             <a href="#" onClick={(e) => { e.preventDefault(); handleRemove(b.book_id) }}>Remove</a>
           </div>
         </div>

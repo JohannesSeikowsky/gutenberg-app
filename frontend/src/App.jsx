@@ -28,10 +28,13 @@ export default function App() {
   const [readerBookId, setReaderBookId] = useState(null);
   const [prevPage, setPrevPage] = useState('discover');
 
-  const openReader = (bookId) => {
+  const [readerBookSummary, setReaderBookSummary] = useState(null);
+
+  const openReader = (bookId, summary = null) => {
     /**Open the in-app reader for a book.*/
     setPrevPage(page);
     setReaderBookId(bookId);
+    setReaderBookSummary(summary);
     setPage('reader');
   };
 
@@ -56,7 +59,7 @@ export default function App() {
   if (!user) return <Login />;
 
   if (page === 'reader') {
-    return <ReaderView bookId={readerBookId} onBack={() => setPage(prevPage)} />;
+    return <ReaderView bookId={readerBookId} summary={readerBookSummary} user={user} onBack={() => setPage(prevPage)} />;
   }
 
   if (page === 'library') {
@@ -88,7 +91,7 @@ export default function App() {
         <p>No more books in this category.</p>
       )}
       {!loading && books.length > 0 && index < books.length && (
-        <BookCard book={books[index]} user={user} onBack={() => setIndex(i => i - 1)} canGoBack={index > 0} onNext={() => setIndex(i => i + 1)} onRead={openReader} />
+        <BookCard book={books[index]} user={user} onBack={() => setIndex(i => i - 1)} canGoBack={index > 0} onNext={() => setIndex(i => i + 1)} onRead={(id) => openReader(id, books[index].summary)} />
       )}
     </div>
   );
