@@ -45,7 +45,7 @@ gutenberg_app/
   - `book_categories` — 182k rows mapping `book_id` → `category_id` (backup, not queried). Category IDs match `main_categories.txt` (633–704).
   - `book_summaries` — ~9k rows mapping `book_id` → `summary` (backup, not queried).
   - `user_library` — per-user saved books with `user_id`, `book_id`, `summary`, `added_at`. RLS enforces per-user access.
-- Tables still needed: reading_progress
+  - `reading_progress` — per-user reading position with `user_id`, `book_id`, `text_snippet`, `updated_at`. PK is `(user_id, book_id)`. RLS enforces per-user access.
 
 ## Version 1 Scope
 
@@ -67,7 +67,7 @@ gutenberg_app/
 ### Reading progress
 - App remembers where the user left off in each book
 - When reopening a book, automatically scroll to the last reading position
-- Progress saved per user per book in Supabase as a paragraph/element index (robust across screen sizes)
+- Progress saved per user per book in Supabase as a text snippet (~80 chars from first visible paragraph, robust across screen sizes and DOM structure changes)
 
 ### Book content
 - Flask proxies Gutenberg HTML via `/api/book-content/<book_id>` with LRU cache (128 entries)
