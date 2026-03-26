@@ -73,5 +73,6 @@ gutenberg_app/
 - Flask proxies Gutenberg HTML via `/api/book-content/<book_id>` with LRU cache (128 entries)
 - Frontend uses Readability.js to extract article content, DOMPurify to sanitize
 - In-app reader with mobile-friendly serif typography, continuous scroll
+- Adjustable font size (14–28px, 0.5px steps) via sticky footer with A−/A+ buttons; preference persisted in localStorage
 - Source URL: `https://www.gutenberg.org/cache/epub/{id}/pg{id}-images.html`
 

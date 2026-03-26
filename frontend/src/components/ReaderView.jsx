@@ -31,6 +31,17 @@ function scrollToSnippet(containerEl, snippet) {
   return false;
 }
 
+const DEFAULT_FONT_SIZE = 18;
+const MIN_FONT_SIZE = 14;
+const MAX_FONT_SIZE = 28;
+const FONT_STEP = 0.5;
+
+function loadFontSize() {
+  /**Load saved font size from localStorage.*/
+  const saved = parseInt(localStorage.getItem('reader-font-size'), 10);
+  return saved >= MIN_FONT_SIZE && saved <= MAX_FONT_SIZE ? saved : DEFAULT_FONT_SIZE;
+}
+
 export default function ReaderView({ bookId, summary, user, onBack }) {
   /**Fetches, cleans, and renders a book with mobile-friendly typography.*/
   const [html, setHtml] = useState('');
@@ -38,8 +49,18 @@ export default function ReaderView({ bookId, summary, user, onBack }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [added, setAdded] = useState(false);
+  const [fontSize, setFontSize] = useState(loadFontSize);
   const contentRef = useRef(null);
   const lastSnippetRef = useRef(null);
+
+  const changeFontSize = (delta) => {
+    /**Adjust font size by delta and persist to localStorage.*/
+    setFontSize((prev) => {
+      const next = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, prev + delta));
+      localStorage.setItem('reader-font-size', next);
+      return next;
+    });
+  };
 
   const handleAdd = async () => {
     /**Add current book to library.*/
@@ -187,8 +208,13 @@ export default function ReaderView({ bookId, summary, user, onBack }) {
       <div
         className="reader-content"
         ref={contentRef}
+        style={{ fontSize: fontSize + 'px' }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      <div className="reader-footer">
+        <button onClick={() => changeFontSize(-FONT_STEP)} disabled={fontSize <= MIN_FONT_SIZE}>A−</button>
+        <button onClick={() => changeFontSize(FONT_STEP)} disabled={fontSize >= MAX_FONT_SIZE}>A+</button>
+      </div>
     </div>
   );
 }
