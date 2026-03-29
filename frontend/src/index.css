@@ -309,11 +309,19 @@ select {
   bottom: 0;
   background: white;
   display: flex;
-  justify-content: center;
-  gap: 1.5rem;
+  align-items: center;
   padding: 0.7rem 1rem;
   box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
   z-index: 10;
+}
+
+.reader-footer-spacer {
+  flex: 1;
+}
+
+.reader-footer-center {
+  display: flex;
+  gap: 1.5rem;
 }
 
 .reader-footer button {
@@ -329,6 +337,59 @@ select {
 .reader-footer button:disabled {
   opacity: 0.3;
   cursor: default;
+}
+
+.reader-mode-btn {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  border: none !important;
+  background: none !important;
+  font-size: 1.4rem !important;
+  min-width: auto !important;
+  padding: 0.2rem 0.4rem !important;
+}
+
+/* Dark mode overrides */
+.reader-dark {
+  background: #1a1a1a;
+  min-height: 100vh;
+}
+
+.reader-dark .reader-toolbar {
+  background: #1a1a1a;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.reader-dark .reader-toolbar button {
+  color: #e0e0e0;
+}
+
+.reader-dark .reader-title {
+  color: #e0e0e0;
+}
+
+.reader-dark .reader-add-btn {
+  background: #3b82f6;
+}
+
+.reader-dark .reader-content {
+  background: #1a1a1a;
+  color: #d4d4d4;
+}
+
+.reader-dark .reader-content a {
+  color: #6ba3f7;
+}
+
+.reader-dark .reader-footer {
+  background: #1a1a1a;
+  box-shadow: 0 -1px 3px rgba(0,0,0,0.4);
+}
+
+.reader-dark .reader-footer button {
+  color: #d4d4d4;
+  border-color: #444;
 }
 
 @media (max-width: 600px) {

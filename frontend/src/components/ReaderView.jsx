@@ -50,8 +50,23 @@ export default function ReaderView({ bookId, summary, user, onBack }) {
   const [error, setError] = useState(null);
   const [added, setAdded] = useState(false);
   const [fontSize, setFontSize] = useState(loadFontSize);
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('reader-dark-mode') === 'true');
   const contentRef = useRef(null);
   const lastSnippetRef = useRef(null);
+
+  const toggleDarkMode = () => {
+    /**Toggle dark mode and persist to localStorage.*/
+    setDarkMode((prev) => {
+      localStorage.setItem('reader-dark-mode', !prev);
+      return !prev;
+    });
+  };
+
+  // Set body background to match dark/light mode
+  useEffect(() => {
+    document.body.style.background = darkMode ? '#1a1a1a' : '';
+    return () => { document.body.style.background = ''; };
+  }, [darkMode]);
 
   const changeFontSize = (delta) => {
     /**Adjust font size by delta and persist to localStorage.*/
@@ -195,7 +210,7 @@ export default function ReaderView({ bookId, summary, user, onBack }) {
   }
 
   return (
-    <div>
+    <div className={darkMode ? 'reader-dark' : ''}>
       <div className="reader-toolbar">
         <button onClick={handleBack}>&larr;</button>
         <span className="reader-title">{title}</span>
@@ -212,8 +227,12 @@ export default function ReaderView({ bookId, summary, user, onBack }) {
         dangerouslySetInnerHTML={{ __html: html }}
       />
       <div className="reader-footer">
-        <button onClick={() => changeFontSize(-FONT_STEP)} disabled={fontSize <= MIN_FONT_SIZE}>A−</button>
-        <button onClick={() => changeFontSize(FONT_STEP)} disabled={fontSize >= MAX_FONT_SIZE}>A+</button>
+        <div className="reader-footer-spacer" />
+        <div className="reader-footer-center">
+          <button onClick={() => changeFontSize(-FONT_STEP)} disabled={fontSize <= MIN_FONT_SIZE}>A−</button>
+          <button onClick={() => changeFontSize(FONT_STEP)} disabled={fontSize >= MAX_FONT_SIZE}>A+</button>
+        </div>
+        <button className="reader-mode-btn" onClick={toggleDarkMode}>{darkMode ? '☀️' : '🌙'}</button>
       </div>
     </div>
   );
