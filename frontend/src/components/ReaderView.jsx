@@ -8,10 +8,11 @@ import { saveProgress, loadProgress } from '../lib/progress';
 
 function getVisibleSnippet(containerEl) {
   /**Return ~80 chars of text from the first visible element in the reader.*/
+  const containerRect = containerEl.getBoundingClientRect();
   const elements = containerEl.querySelectorAll('p, h1, h2, h3, h4, li');
   for (const el of elements) {
     const rect = el.getBoundingClientRect();
-    if (rect.bottom > 80 && rect.top < window.innerHeight / 2) {
+    if (rect.bottom > containerRect.top && rect.top < containerRect.top + containerEl.clientHeight / 2) {
       const text = el.textContent.trim();
       if (text.length > 10) return text.slice(0, 80);
     }
@@ -20,11 +21,11 @@ function getVisibleSnippet(containerEl) {
 }
 
 function scrollToSnippet(containerEl, snippet) {
-  /**Find the element containing the snippet and scroll it into view.*/
+  /**Find the element containing the snippet and scroll it into view within the container.*/
   const elements = containerEl.querySelectorAll('p, h1, h2, h3, h4, li');
   for (const el of elements) {
     if (el.textContent.includes(snippet)) {
-      el.scrollIntoView({ behavior: 'instant' });
+      el.scrollIntoView({ behavior: 'instant', block: 'start' });
       return true;
     }
   }
@@ -142,30 +143,31 @@ export default function ReaderView({ bookId, summary, user, onBack }) {
 
   // Restore saved reading position after content renders
   useEffect(() => {
-    if (!html || !user) { window.scrollTo(0, 0); return; }
+    if (!html || !user) { if (contentRef.current) contentRef.current.scrollTop = 0; return; }
 
     loadProgress(user.id, bookId).then((snippet) => {
       requestAnimationFrame(() => {
         if (snippet && contentRef.current) {
           const found = scrollToSnippet(contentRef.current, snippet);
-          if (!found) window.scrollTo(0, 0);
+          if (!found && contentRef.current) contentRef.current.scrollTop = 0;
           lastSnippetRef.current = snippet;
-        } else {
-          window.scrollTo(0, 0);
+        } else if (contentRef.current) {
+          contentRef.current.scrollTop = 0;
         }
       });
-    }).catch(() => window.scrollTo(0, 0));
+    }).catch(() => { if (contentRef.current) contentRef.current.scrollTop = 0; });
   }, [html, user, bookId]);
 
   // Track scroll position and save progress (debounced)
   useEffect(() => {
     if (!user || !html || !contentRef.current) return;
+    const container = contentRef.current;
 
     let debounceTimer;
     const handleScroll = () => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
-        const snippet = getVisibleSnippet(contentRef.current);
+        const snippet = getVisibleSnippet(container);
         if (snippet && snippet !== lastSnippetRef.current) {
           lastSnippetRef.current = snippet;
           saveProgress(user.id, bookId, snippet).catch(() => {});
@@ -173,10 +175,10 @@ export default function ReaderView({ bookId, summary, user, onBack }) {
       }, 3000);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    container.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       clearTimeout(debounceTimer);
-      window.removeEventListener('scroll', handleScroll);
+      container.removeEventListener('scroll', handleScroll);
     };
   }, [user, html, bookId]);
 
@@ -210,7 +212,7 @@ export default function ReaderView({ bookId, summary, user, onBack }) {
   }
 
   return (
-    <div className={darkMode ? 'reader-dark' : ''}>
+    <div className={`reader-wrapper${darkMode ? ' reader-dark' : ''}`}>
       <div className="reader-toolbar">
         <button onClick={handleBack}>&larr;</button>
         <span className="reader-title">{title}</span>

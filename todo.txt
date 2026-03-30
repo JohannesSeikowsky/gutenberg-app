@@ -1,0 +1,11 @@
+- open-source it
+
+- add wikipedia links
+- decision about scrolling behaviour when re-opening a book
+- beginning of many books not well formatted --> LLM based solution
+
+- pre-processing of all books (rather than serving and processing in real time from Gberg) 
+- deployment
+
+- optimized for feeding to Capacitor.
+- copyright thing?

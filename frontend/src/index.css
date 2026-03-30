@@ -240,9 +240,15 @@ select {
 }
 
 /* Reader */
+.reader-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+}
+
 .reader-toolbar {
-  position: sticky;
-  top: 0;
+  flex-shrink: 0;
   background: white;
   display: flex;
   align-items: center;
@@ -281,6 +287,9 @@ select {
 }
 
 .reader-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: clip;
   font-family: Georgia, 'Times New Roman', serif;
   font-size: 18px;
   line-height: 1.6;
@@ -290,6 +299,8 @@ select {
   text-align: left;
   word-break: break-word;
   hyphens: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .reader-content p { margin-bottom: 1em; }
@@ -303,10 +314,15 @@ select {
   display: block;
   margin: 1em auto;
 }
+.reader-content table,
+.reader-content pre {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
 
 .reader-footer {
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
   background: white;
   display: flex;
   align-items: center;
@@ -353,7 +369,6 @@ select {
 /* Dark mode overrides */
 .reader-dark {
   background: #1a1a1a;
-  min-height: 100vh;
 }
 
 .reader-dark .reader-toolbar {
