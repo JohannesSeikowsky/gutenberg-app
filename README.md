@@ -26,6 +26,7 @@ gutenberg_app/
 ├── backend/          # Flask API (book content proxy, category/book endpoints)
 ├── frontend/         # React SPA (discovery, reader, library, auth)
 ├── main_categories.txt   # 72 Gutenberg categories (IDs 633–704)
+├── wikipedia_links.txt   # ~10.8k book_id → Wikipedia URL mappings
 └── myenv/            # Python virtual environment
 ```
 

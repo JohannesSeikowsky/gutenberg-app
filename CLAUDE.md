@@ -13,6 +13,7 @@ A smartphone app (iOS, potentially Android) to read books from Project Gutenberg
 gutenberg_app/
 ├── backend/    # Flask API
 ├── frontend/   # React app (also packaged via Capacitor for mobile)
+├── wikipedia_links.txt  # ~10.8k rows: book_id,wikipedia_url (some books have multiple links)
 └── myenv/      # Python virtual environment (already exists — do NOT recreate)
 ```
 

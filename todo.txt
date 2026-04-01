@@ -4,8 +4,12 @@
 - decision about scrolling behaviour when re-opening a book
 - beginning of many books not well formatted --> LLM based solution
 
-- pre-processing of all books (rather than serving and processing in real time from Gberg) 
+- pre-processing of all books (rather than serving and processing in real time from Gberg)
 - deployment
 
 - optimized for feeding to Capacitor.
 - copyright thing?
+
+- front-end determined by back-end? that article. possible way around repeated app-store deployments ...
+- ...
+
