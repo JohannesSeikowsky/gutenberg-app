@@ -66,6 +66,29 @@ select {
   margin-bottom: 1.5rem;
 }
 
+.wikipedia-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.wikipedia-links a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.wikipedia-links a::before {
+  content: "W ";
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.wikipedia-links a:hover {
+  text-decoration: underline;
+}
+
 .book-actions {
   display: flex;
   gap: 0.5rem;

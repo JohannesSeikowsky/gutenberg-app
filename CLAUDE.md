@@ -47,6 +47,7 @@ gutenberg_app/
   - `book_summaries` — ~9k rows mapping `book_id` → `summary` (backup, not queried).
   - `user_library` — per-user saved books with `user_id`, `book_id`, `summary`, `added_at`. RLS enforces per-user access.
   - `reading_progress` — per-user reading position with `user_id`, `book_id`, `text_snippet`, `updated_at`. PK is `(user_id, book_id)`. RLS enforces per-user access.
+  - `wikipedia_links` — ~12k rows mapping `book_id` → `url`. Some books have two links (e.g. English + another language). Loaded into memory at Flask startup for fast lookup.
 
 ## Version 1 Scope
 
@@ -63,6 +64,7 @@ gutenberg_app/
   - **Start reading** — opens the book in the in-app reader view
   - **Add to library** — save it to their personal list
   - **Next** — show another book from the same category (instant, no API call)
+- Wikipedia links shown on book cards when available (loaded into Flask memory at startup from `wikipedia_links` table)
 - Full search is deferred to a later version
 
 ### Reading progress

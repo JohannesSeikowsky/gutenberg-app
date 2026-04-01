@@ -14,6 +14,21 @@ CORS(app)
 
 supabase = create_client(os.environ['SUPABASE_URL'], os.environ['SUPABASE_KEY'])
 
+def _load_wikipedia_links():
+    """Load all wikipedia links from Supabase into {book_id: [url, ...]}."""
+    links = {}
+    offset = 0
+    while True:
+        r = supabase.table('wikipedia_links').select('book_id, url').range(offset, offset + 999).execute()
+        for row in r.data:
+            links.setdefault(row['book_id'], []).append(row['url'])
+        if len(r.data) < 1000:
+            break
+        offset += 1000
+    return links
+
+WIKIPEDIA_LINKS = _load_wikipedia_links()
+
 CATEGORIES = {
     633: "Literature - Other", 634: "Short Stories", 635: "Historical Novels",
     636: "Children & Young Adult Reading", 637: "Poetry", 638: "Science-Fiction & Fantasy",
@@ -55,7 +70,7 @@ def get_categories():
 
 @app.route('/api/categories/<int:category_id>/books')
 def get_books(category_id):
-    """Return all books with summaries for a category."""
+    """Return all books with summaries and wikipedia links for a category."""
     if category_id not in CATEGORIES:
         return jsonify({'error': 'Category not found'}), 404
 
@@ -63,6 +78,9 @@ def get_books(category_id):
         .select('book_id, summary') \
         .eq('category_id', category_id) \
         .execute()
+
+    for book in result.data:
+        book['wikipedia_links'] = WIKIPEDIA_LINKS.get(book['book_id'], [])
 
     return jsonify(result.data)
 

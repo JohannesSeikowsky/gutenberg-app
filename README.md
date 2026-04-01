@@ -4,7 +4,7 @@ A smartphone app for discovering and reading books from [Project Gutenberg](http
 
 ## Features
 
-- **Book discovery** — Browse 72 categories (literature, history, science, etc.). Books are shuffled for serendipitous discovery. Each book card shows a summary to help you decide what to read.
+- **Book discovery** — Browse 72 categories (literature, history, science, etc.). Books are shuffled for serendipitous discovery. Each book card shows a summary and Wikipedia links to help you decide what to read.
 - **In-app reader** — Read full Gutenberg books without leaving the app. Content is extracted with Readability.js and sanitized with DOMPurify. Mobile-friendly serif typography with adjustable font size and dark mode.
 - **Reading progress** — Automatically saves your position in each book (as a text snippet, so it's robust across screen sizes). Reopening a book scrolls to where you left off.
 - **Personal library** — Save books to read later. One tap to add from the discovery view or from within the reader.
@@ -74,8 +74,9 @@ The app expects these tables:
 | `category_summary_books` | Pre-joined category + book + summary (~21k rows) |
 | `user_library` | Per-user saved books (RLS enabled) |
 | `reading_progress` | Per-user reading position as text snippet (RLS enabled) |
+| `wikipedia_links` | Book → Wikipedia URL mappings (~12k rows) |
 
-Data import scripts in `backend/` populate the book tables from `wiki-based-summaries.csv`.
+Data import scripts in `backend/` populate the book tables from `wiki-based-summaries.csv` and `wikipedia_links.txt`.
 
 ## License
 
