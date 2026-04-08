@@ -23,7 +23,7 @@ const WIKI_STYLE = `<style>
   td, th { border: 1px solid #ddd; padding: 4px 8px; }
   a { color: #007bff; }
   .infobox, .sidebar { max-width: 100%; }
-  .mw-editsection { display: none; }
+  .mw-editsection, .ambox, .mbox-small, .sistersitebox, .mw-empty-elt { display: none; }
 </style>`;
 
 export default function BookCard({ book, user, onBack, canGoBack, onNext, onRead }) {
