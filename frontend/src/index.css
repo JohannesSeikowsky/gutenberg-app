@@ -66,34 +66,26 @@ select {
   margin-bottom: 1.5rem;
 }
 
-.wikipedia-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
+.wiki-header {
+  margin-bottom: 0.75rem;
 }
 
-.wikipedia-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.85rem;
-  background: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  color: #333;
-  text-decoration: none;
+.wiki-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.15rem;
+}
+
+.wiki-author {
   font-size: 0.95rem;
-  font-weight: 500;
-  transition: background 0.15s;
+  color: #666;
 }
 
-.wikipedia-links a::before {
-  content: none;
-}
-
-.wikipedia-links a:hover {
-  background: #e0e0e0;
+.wiki-iframe {
+  width: 100%;
+  height: 60vh;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 1.25rem;
 }
 
 .book-actions {

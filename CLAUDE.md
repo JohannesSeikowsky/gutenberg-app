@@ -64,7 +64,7 @@ gutenberg_app/
   - **Start reading** — opens the book in the in-app reader view
   - **Add to library** — save it to their personal list
   - **Next** — show another book from the same category (instant, no API call)
-- Wikipedia links shown on book cards when available (loaded into Flask memory at startup from `wikipedia_links` table)
+- Book cards show the full Wikipedia article (fetched via Wikipedia parse API) in a scrollable iframe, with title and author above. Falls back to summary text if no Wikipedia link exists. Wikipedia links loaded into Flask memory at startup from `wikipedia_links` table.
 - Full search is deferred to a later version
 
 ### Reading progress

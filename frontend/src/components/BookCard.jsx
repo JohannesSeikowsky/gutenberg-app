@@ -1,25 +1,49 @@
-/**Displays a book summary with action buttons.*/
-import { useState } from 'react';
+/**Displays a book with embedded Wikipedia content and action buttons.*/
+import { useState, useEffect } from 'react';
 import { addToLibrary } from '../lib/library';
 
-function formatSummary(text) {
-  /**Bold the opening quoted title in a summary string.*/
-  const match = text.match(/^(".*?")/);
-  if (!match) return text;
-  return <><strong style={{ fontSize: '1.2em' }}>{match[1]}</strong>{text.slice(match[1].length)}</>;
+function extractAuthor(summary) {
+  /**Extract author name from summary string like '"Title" by Author is...'.*/
+  const match = summary.match(/^".*?"\s+by\s+(.+?)\s+(?:is|was|are|were)\b/);
+  return match ? match[1] : null;
 }
 
-function formatWikiLabel(url) {
-  /**Extract a readable label from a Wikipedia URL.*/
-  const parsed = new URL(url);
+function wikiParseUrl(pageUrl) {
+  /**Build a Wikipedia parse API URL that returns full article HTML.*/
+  const parsed = new URL(pageUrl);
   const lang = parsed.hostname.split('.')[0];
-  const title = decodeURIComponent(parsed.pathname.split('/').pop()).replace(/_/g, ' ');
-  return lang === 'en' ? `Wikipedia: ${title}` : `Wikipedia (${lang}): ${title}`;
+  const title = parsed.pathname.split('/').pop();
+  return `https://${lang}.wikipedia.org/w/api.php?action=parse&page=${title}&format=json&origin=*&prop=text`;
 }
+
+const WIKI_STYLE = `<style>
+  body { font-family: -apple-system, sans-serif; font-size: 15px; line-height: 1.6; padding: 12px; margin: 0; color: #333; }
+  img { max-width: 100%; height: auto; }
+  table { border-collapse: collapse; max-width: 100%; font-size: 0.9em; }
+  td, th { border: 1px solid #ddd; padding: 4px 8px; }
+  a { color: #007bff; }
+  .infobox, .sidebar { max-width: 100%; }
+  .mw-editsection { display: none; }
+</style>`;
 
 export default function BookCard({ book, user, onBack, canGoBack, onNext, onRead }) {
-  /**Book card with back, read, add-to-library, and next actions.*/
+  /**Book card with embedded Wikipedia extract and action buttons.*/
   const [added, setAdded] = useState(false);
+  const [wikiHtml, setWikiHtml] = useState('');
+  const [wikiTitle, setWikiTitle] = useState('');
+
+  useEffect(() => {
+    /**Fetch full Wikipedia mobile HTML for the first available link.*/
+    setWikiHtml('');
+    setWikiTitle('');
+    const url = book.wikipedia_links?.[0];
+    if (!url) return;
+    setWikiTitle(decodeURIComponent(url.split('/').pop()).replace(/_/g, ' '));
+    fetch(wikiParseUrl(url))
+      .then(r => r.json())
+      .then(data => setWikiHtml(WIKI_STYLE + data.parse.text['*']))
+      .catch(() => setWikiHtml(''));
+  }, [book.book_id]);
 
   const handleAdd = async () => {
     /**Add book to library and show confirmation.*/
@@ -30,15 +54,23 @@ export default function BookCard({ book, user, onBack, canGoBack, onNext, onRead
 
   return (
     <div className="book-card">
-      <p className="book-summary">{formatSummary(book.summary)}</p>
-      {book.wikipedia_links?.length > 0 && (
-        <div className="wikipedia-links">
-          {book.wikipedia_links.map((url) => (
-            <a key={url} href={url} target="_blank" rel="noopener noreferrer">
-              {formatWikiLabel(url)}
-            </a>
-          ))}
+      {wikiTitle && (
+        <div className="wiki-header">
+          <h2 className="wiki-title">{wikiTitle}</h2>
+          {extractAuthor(book.summary) && (
+            <p className="wiki-author">by {extractAuthor(book.summary)}</p>
+          )}
         </div>
+      )}
+      {wikiHtml ? (
+        <iframe
+          className="wiki-iframe"
+          srcDoc={wikiHtml}
+          sandbox="allow-same-origin"
+          title="Wikipedia article"
+        />
+      ) : (
+        <p className="book-summary">{book.summary}</p>
       )}
       <div className="book-actions">
         <button onClick={onBack} disabled={!canGoBack}>Back</button>

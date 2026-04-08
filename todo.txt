@@ -3,6 +3,9 @@
 - add wikipedia links
 - beginning of many books not well formatted --> LLM based solution
 
+- discrepancy between language of book and of wikipedia article.
+
+
 - pre-processing of all books (rather than serving and processing in real time from Gberg)
 - deployment
 
