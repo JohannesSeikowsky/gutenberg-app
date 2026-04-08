@@ -69,24 +69,31 @@ select {
 .wikipedia-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 0.75rem;
-  margin-bottom: 1rem;
-  font-size: 0.85rem;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .wikipedia-links a {
-  color: #007bff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  color: #333;
   text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.15s;
 }
 
 .wikipedia-links a::before {
-  content: "W ";
-  font-weight: 600;
-  opacity: 0.5;
+  content: none;
 }
 
 .wikipedia-links a:hover {
-  text-decoration: underline;
+  background: #e0e0e0;
 }
 
 .book-actions {

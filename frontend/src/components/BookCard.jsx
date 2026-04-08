@@ -14,7 +14,7 @@ function formatWikiLabel(url) {
   const parsed = new URL(url);
   const lang = parsed.hostname.split('.')[0];
   const title = decodeURIComponent(parsed.pathname.split('/').pop()).replace(/_/g, ' ');
-  return lang === 'en' ? title : `(${lang}) ${title}`;
+  return lang === 'en' ? `Wikipedia: ${title}` : `Wikipedia (${lang}): ${title}`;
 }
 
 export default function BookCard({ book, user, onBack, canGoBack, onNext, onRead }) {
