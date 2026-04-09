@@ -99,9 +99,14 @@ select {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   background: #007bff;
   color: white;
+}
+
+.book-actions .read-now-btn {
+  flex: 2;
+  background: #28a745;
 }
 
 .book-actions button:first-child,

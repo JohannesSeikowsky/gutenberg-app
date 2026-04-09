@@ -1,6 +1,5 @@
 /**Displays a book with embedded Wikipedia content and action buttons.*/
 import { useState, useEffect } from 'react';
-import { addToLibrary } from '../lib/library';
 
 function extractAuthor(summary) {
   /**Extract author name from summary string like '"Title" by Author is...'.*/
@@ -28,29 +27,24 @@ const WIKI_STYLE = `<style>
 
 export default function BookCard({ book, user, onBack, canGoBack, onNext, onRead }) {
   /**Book card with embedded Wikipedia extract and action buttons.*/
-  const [added, setAdded] = useState(false);
   const [wikiHtml, setWikiHtml] = useState('');
   const [wikiTitle, setWikiTitle] = useState('');
+  const [wikiLoading, setWikiLoading] = useState(false);
 
   useEffect(() => {
     /**Fetch full Wikipedia mobile HTML for the first available link.*/
     setWikiHtml('');
     setWikiTitle('');
     const url = book.wikipedia_links?.[0];
-    if (!url) return;
+    if (!url) { setWikiLoading(false); return; }
+    setWikiLoading(true);
     setWikiTitle(decodeURIComponent(url.split('/').pop()).replace(/_/g, ' '));
     fetch(wikiParseUrl(url))
       .then(r => r.json())
       .then(data => setWikiHtml(WIKI_STYLE + data.parse.text['*']))
-      .catch(() => setWikiHtml(''));
+      .catch(() => setWikiHtml(''))
+      .finally(() => setWikiLoading(false));
   }, [book.book_id]);
-
-  const handleAdd = async () => {
-    /**Add book to library and show confirmation.*/
-    await addToLibrary(user.id, book.book_id, book.summary);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
-  };
 
   return (
     <div className="book-card">
@@ -62,7 +56,9 @@ export default function BookCard({ book, user, onBack, canGoBack, onNext, onRead
           )}
         </div>
       )}
-      {wikiHtml ? (
+      {wikiLoading ? (
+        <div className="wiki-iframe" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>Loading…</div>
+      ) : wikiHtml ? (
         <iframe
           className="wiki-iframe"
           srcDoc={wikiHtml}
@@ -74,11 +70,9 @@ export default function BookCard({ book, user, onBack, canGoBack, onNext, onRead
       )}
       <div className="book-actions">
         <button onClick={onBack} disabled={!canGoBack}>Back</button>
-        <button onClick={() => onRead(book.book_id)}>Start Reading</button>
-        <button onClick={handleAdd}>Add to Library</button>
+        <button className="read-now-btn" onClick={() => onRead(book.book_id)}>Read Now</button>
         <button onClick={onNext}>Next</button>
       </div>
-      {added && <p className="added-toast">Added to Library</p>}
     </div>
   );
 }

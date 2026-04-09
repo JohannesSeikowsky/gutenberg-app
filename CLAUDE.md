@@ -59,10 +59,9 @@ gutenberg_app/
 - Single-page UI: category dropdown at top, book card below (no routing)
 - User picks one of the main Gutenberg categories from a dropdown
 - All books for a category are fetched in one request, shuffled client-side
-- One book is shown at a time with four actions:
+- One book is shown at a time with three actions:
   - **Back** — return to the previously shown book (disabled on first book)
-  - **Start reading** — opens the book in the in-app reader view
-  - **Add to library** — save it to their personal list
+  - **Read Now** — opens the book in the in-app reader view
   - **Next** — show another book from the same category (instant, no API call)
 - Book cards show the full Wikipedia article (fetched via Wikipedia parse API) in a scrollable iframe, with title and author above. Falls back to summary text if no Wikipedia link exists. Wikipedia links loaded into Flask memory at startup from `wikipedia_links` table.
 - Full search is deferred to a later version
